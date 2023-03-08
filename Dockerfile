@@ -27,3 +27,5 @@ RUN /opt/poetry/bin/poetry install
 COPY . /app/
 
 EXPOSE 6000
+
+CMD ["python", "app.py"]

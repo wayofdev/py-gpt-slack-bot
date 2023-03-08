@@ -47,18 +47,13 @@ def handle_mention(event, say):
     say(text=response)
 
 
-@app.event("message.im")
-def handle_direct_message(event, say):
-    prompt = strip_mentions(event['text'])
-    response = send_message([{"role": "user", "content": prompt}])
-    say(text=response)
-
-
-@app.event("message.groups")
-def handle_group_message(event, say):
-    prompt = strip_mentions(event['text'])
-    response = send_message([{"role": "user", "content": prompt}])
-    say(text=response)
+@app.event("message")
+def handle_message(event, say):
+    # Check if message is in a private channel or a direct message
+    if event['channel_type'] in ('im', 'mpim'):
+        prompt = strip_mentions(event['text'])
+        response = send_message([{"role": "user", "content": prompt}])
+        say(text=response)
 
 
 @app.event("event_callback")

@@ -1,0 +1,23 @@
+---
+
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    restart: on-failure
+    volumes:
+      - ./src:/app:rw
+      - ./.env:/app/.env
+    working_dir: /app
+    command: 'python /app/app.py'
+    env_file:
+      - ./.env
+    ports:
+      - '${APP_PORT:-6000}:6000'
+    tty: true
+
+...

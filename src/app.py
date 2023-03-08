@@ -20,9 +20,9 @@ def send_message(message_log):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=message_log,
-        max_tokens=3800,
+        max_tokens=4000,
         stop=None,
-        temperature=0.7,
+        temperature=1.0,
     )
     # Find the first response from the chatbot that has text in it
     # (some responses may not have text)
@@ -43,7 +43,7 @@ def strip_mentions(text):
 def handle_mention(event, say):
     # Strip mentions from the message text
     prompt = strip_mentions(event['text'])
-    response = send_message([{"role": "user", "content": prompt}])
+    response = send_message([{"role": "assistant", "content": prompt}])
     say(text=response)
 
 
@@ -52,7 +52,7 @@ def handle_message(event, say):
     # Check if message is in a private channel or a direct message
     if event['channel_type'] in ('im', 'mpim'):
         prompt = strip_mentions(event['text'])
-        response = send_message([{"role": "user", "content": prompt}])
+        response = send_message([{"role": "assistant", "content": prompt}])
         say(text=response)
 
 

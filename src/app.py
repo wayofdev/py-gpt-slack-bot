@@ -35,10 +35,28 @@ def send_message(message_log):
     return response.choices[0].message.content
 
 
+def strip_mentions(text):
+    return re.sub('(?:\s)<@[^, ]*|(?:^)<@[^, ]*', '', text)
+
+
 @app.event("app_mention")
 def handle_mention(event, say):
     # Strip mentions from the message text
-    prompt = re.sub('(?:\s)<@[^, ]*|(?:^)<@[^, ]*', '', event['text'])
+    prompt = strip_mentions(event['text'])
+    response = send_message([{"role": "user", "content": prompt}])
+    say(text=response)
+
+
+@app.event("message.im")
+def handle_direct_message(event, say):
+    prompt = strip_mentions(event['text'])
+    response = send_message([{"role": "user", "content": prompt}])
+    say(text=response)
+
+
+@app.event("message.groups")
+def handle_group_message(event, say):
+    prompt = strip_mentions(event['text'])
     response = send_message([{"role": "user", "content": prompt}])
     say(text=response)
 
